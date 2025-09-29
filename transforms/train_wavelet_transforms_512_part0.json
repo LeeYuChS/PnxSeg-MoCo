@@ -1,0 +1,17 @@
+{
+  "transform": {
+    "__class_fullname__": "albumentations.core.composition.Compose",
+    "p": 1.0,
+    "is_check_shapes": false,
+    "transforms": [
+      {
+        "__class_fullname__": "albumentations.augmentations.transforms.Resize",
+        "p": 1,
+        "height": 512,
+        "width": 512,
+        "interpolation": 1
+      }
+    ]
+  }
+}
+

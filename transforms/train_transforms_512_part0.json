@@ -1,0 +1,74 @@
+{
+  "transform": {
+    "__class_fullname__": "albumentations.core.composition.Compose",
+    "p": 1.0,
+    "transforms": [
+      {
+        "__class_fullname__": "albumentations.augmentations.transforms.HorizontalFlip",
+        "p": 0.5
+      },
+      {
+        "__class_fullname__": "albumentations.core.composition.OneOf",
+        "p": 0.3,
+        "transforms": [
+          {
+            "__class_fullname__": "albumentations.augmentations.transforms.RandomBrightnessContrast",
+            "p": 0.5,
+            "brightness_limit": 0.2,
+            "contrast_limit": 0.2
+          },
+          {
+            "__class_fullname__": "albumentations.augmentations.transforms.RandomGamma",
+            "p": 0.5,
+            "gamma_limit": [80, 120]
+          }
+        ]
+      },
+      {
+        "__class_fullname__": "albumentations.core.composition.OneOf",
+        "p": 0.3,
+        "transforms": [
+          {
+            "__class_fullname__": "albumentations.augmentations.transforms.ElasticTransform",
+            "p": 0.5,
+            "alpha": 120,
+            "sigma": 6.0,
+            "interpolation": 1,
+            "border_mode": 4
+          },
+          {
+            "__class_fullname__": "albumentations.augmentations.transforms.GridDistortion",
+            "p": 0.5,
+            "num_steps": 5,
+            "distort_limit": 0.3,
+            "interpolation": 1,
+            "border_mode": 4
+          },
+          {
+            "__class_fullname__": "albumentations.augmentations.transforms.OpticalDistortion",
+            "p": 0.5,
+            "distort_limit": 2,
+            "interpolation": 1,
+            "border_mode": 4
+          }
+        ]
+      },
+      {
+        "__class_fullname__": "albumentations.augmentations.geometric.transforms.Affine",
+        "p": 0.5,
+        "translate_percent": {"x": [-0.0625, 0.0625], "y": [-0.0625, 0.0625]},
+        "scale": [0.9, 1.1],
+        "rotate": [-45, 45],
+        "interpolation": 1,
+        "mode": 4
+      },
+      {
+        "__class_fullname__": "albumentations.augmentations.transforms.Resize",
+        "p": 1,
+        "height": 512,
+        "width": 512,
+        "interpolation": 1
+      }
+    ]
+  }
+}

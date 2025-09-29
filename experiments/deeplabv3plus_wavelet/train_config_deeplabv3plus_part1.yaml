@@ -1,0 +1,91 @@
+#main
+PIPELINE_NAME: deeplabv3plus_768
+DATA_DIRECTORY: '../siim-acr-pneumothorax/step_new'
+LOGGER_DIR: 'part1/log'
+
+SEED: 42
+DEVICE: cuda
+DEVICE_LIST: [0]
+WORKERS: 4
+
+MODEL:
+  PRETRAINED: 
+    PIPELINE_PATH: experiments/deeplabv3plus_wavelet
+    CHECKPOINTS_FOLDER: checkpoints
+    PIPELINE_NAME: deeplabv3plus_512
+
+  FREEZE: False
+  PY: models.ternausnets
+  CLASS: DeepLabV3Plus
+  ARGS:
+      encoder_name: resnet50
+      encoder_weights: imagenet
+      in_channels: 3
+      classes: 1
+      activation: null
+      pretrained: True
+
+FOLD:
+  NUMBER: 5
+  USEFOLDS: [0,1,2,3,4]
+  FILE: ../siim-acr-pneumothorax/folds/train_folds_5_png.csv
+
+# preprocessing
+USE_SAMPLER: True
+NON_EMPTY_MASK_PROBA: 0.6
+
+# TRAIN_TRANSFORMS:
+#     transforms/train_wavelet_transforms_768_part1.json
+# VALID_TRANSFORMS:
+#     transforms/valid_wavelet_transforms_768_part1.json
+
+# training
+CRITERION: 
+    PY: Losses
+    CLASS: ComboLoss
+    ARGS: 
+        weights:
+            bce: 1
+            dice: 0.5
+            focal: 0.5
+            
+OPTIMIZER:
+  CLASS: Adam
+  ARGS:
+    lr: 0.00001
+    weight_decay: 0.000005
+
+SCHEDULER:
+  CLASS: ReduceLROnPlateau
+  ARGS:
+    mode: max
+    factor: 0.1
+    patience: 2
+    threshold: 0.0000001
+    min_lr: 0.0000001
+    
+BATCH_SIZE: 12
+GRADIENT_ACCUMULATION_STEPS: 1
+GRADIENT_CLIPPING: 0.1
+EPOCHES: 50
+EARLY_STOPPING: 10
+VALIDATION_FREQUENCY: 1
+
+# saving
+CHECKPOINTS:
+    FULL_FOLDER: checkpoints
+    BEST_FOLDER: checkpoints
+    TOPK: 3
+
+# validation
+MASK_BINARIZER:
+  PY: MaskBinarizers
+  CLASS: TripletMaskBinarization
+  ARGS:
+    triplets: [[0.75, 750, 0.3], [0.75, 750, 0.4], [0.75, 1500, 0.3], [0.75, 1500, 0.4], [0.6, 1500, 0.3], [0.6, 2250, 0.4], [0.6, 2250, 0.3], [0.6, 2250, 0.4]]
+
+EVALUATION_METRIC:
+  PY: Losses
+  CLASS: dice_metric
+  ARGS: 
+    per_image: True
