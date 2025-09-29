@@ -6,10 +6,15 @@ For research purposes, please cite the original project as recommended in their 
 
 ## Installation
 
-Install the required dependencies using:
-
+1. Create a Python environment
 ```
-pip install -r requirements.txt
+conda create --name MoCoSeg python=3.10
+conda activate MoCoSeg
+```
+2. Install the dependencies:
+```
+pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
+pip install matplotlib scikit-learn pandas tqdm opencv-python segmentation-models-pytorch albumentations transformers
 ```
 
 Note: This assumes the original dependencies suffice; additional libraries for GroupViT (e.g., via PyTorch) may be needed if not included. Verify compatibility with Python 3.x and GPU support for training.
